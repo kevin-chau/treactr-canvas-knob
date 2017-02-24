@@ -28,6 +28,9 @@ class Knob extends React.Component {
     displayInput: React.PropTypes.bool,
     angleArc: React.PropTypes.number,
     angleOffset: React.PropTypes.number,
+    borderColor: React.PropTypes.string,
+    borderThickness: React.PropTypes.number, // px
+    knobColor: React.PropTypes.string,
   };
 
   static defaultProps = {
@@ -35,8 +38,8 @@ class Knob extends React.Component {
     max: 127,
     step: 1,
     log: false,
-    width: 36, // actual default: width = height = 200px
-    height: 36, // see `dimension` below
+    width: 37, // actual default: width = height = 200px
+    height: 37, // see `dimension` below
     thickness: 0.2,
     lineCap: 'butt',
     bgColor: '#595856',
@@ -52,6 +55,9 @@ class Knob extends React.Component {
     displayInput: false,
     angleArc: 300,
     angleOffset: -150,
+    borderColor: '#000000',
+    borderThickness: 1.25,
+    knobColor: '#252828',
   };
 
   constructor(props) {
@@ -243,36 +249,101 @@ class Knob extends React.Component {
   });
 
   drawCanvas() {
-    this.canvasRef.width = this.w; // clears the canvas
-    this.canvasRef.height = this.h;
+    this.canvasRef.width = this.w + (2 * this.props.borderThickness) + 2; // clears the canvas
+    this.canvasRef.height = this.h + (2 * this.props.borderThickness);
     const ctx = this.canvasRef.getContext('2d');
-    this.xy = this.w / 2; // coordinates of canvas center
+    this.xy = (this.w + (2 * this.props.borderThickness)) / 2; // coordinates of canvas center
     this.lineWidth = this.xy * this.props.thickness;
     this.radius = this.xy - (this.lineWidth / 2);
     ctx.lineWidth = this.lineWidth;
     ctx.lineCap = this.props.lineCap;
+
+    // background arc border
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.arc(
+      this.xy + 1,
+      this.xy + 1,
+      this.radius,
+      this.endAngle + 0.015,
+      this.startAngle - 0.015,
+      true
+    );
+    ctx.stroke();
+
     // background arc
     ctx.beginPath();
     ctx.strokeStyle = this.props.bgColor;
     ctx.arc(
-      this.xy,
-      this.xy,
+      this.xy + 1,
+      this.xy + 1,
       this.radius,
       this.endAngle - 0.00001,
       this.startAngle + 0.00001,
       true
     );
     ctx.stroke();
+
     // foreground arc
     const a = this.getArcToValue(this.props.value);
     ctx.beginPath();
     ctx.strokeStyle = this.props.fgColor;
     ctx.arc(
-      this.xy,
-      this.xy,
+      this.xy + 1,
+      this.xy + 1,
       this.radius,
       a.startAngle,
       a.endAngle,
+      a.acw
+    );
+    ctx.stroke();
+
+    // border
+    ctx.lineWidth = this.props.borderThickness;
+    ctx.strokeStyle = this.props.borderColor;
+    ctx.beginPath();
+    ctx.arc(this.xy + 1, this.xy + 1, this.radius + (this.xy * this.props.thickness / 2), this.startAngle - 0.00001, this.endAngle + 0.00001);
+    ctx.stroke();
+
+    // knob
+    ctx.beginPath();
+    ctx.arc(this.xy + 1, this.xy + 1, this.radius - (this.xy * this.props.thickness / 2), 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#545656';
+    ctx.fill();
+    ctx.lineWidth = this.borderThickness;
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+    // Inner Knob
+    ctx.beginPath();
+    ctx.arc(this.xy + 1, this.xy + 2, this.radius - (this.xy * this.props.thickness / 2) - 2, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#252828';
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#252828';
+    ctx.stroke();
+    // knob indicator border
+    ctx.beginPath();
+    ctx.lineWidth = this.radius - (1.25 * this.xy * this.props.thickness);
+    ctx.strokeStyle = 'black';
+    ctx.arc(
+      this.xy + 1,
+      this.xy + 1,
+      (this.radius / 2),
+      a.endAngle - 0.375,
+      a.endAngle + 0.04,
+      a.acw
+    );
+    ctx.stroke();
+    // knob indicator
+    ctx.beginPath();
+    ctx.lineWidth = this.radius - (2 * this.xy * this.props.thickness);
+    ctx.strokeStyle = '#D7D7D7';
+    ctx.arc(
+      this.xy + 1,
+      this.xy + 1,
+      (this.radius / 2),
+      a.endAngle - 0.275,
+      a.endAngle - 0.05,
       a.acw
     );
     ctx.stroke();
