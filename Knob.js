@@ -336,7 +336,7 @@ class Knob extends React.Component {
     ctx.stroke();
     // knob indicator
     ctx.beginPath();
-    ctx.lineWidth = this.radius - (2 * this.xy * this.props.thickness);
+    ctx.lineWidth = this.radius - (1.5 * this.xy * this.props.thickness);
     ctx.strokeStyle = '#D7D7D7';
     ctx.arc(
       this.xy + 1,
