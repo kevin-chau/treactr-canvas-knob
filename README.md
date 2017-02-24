@@ -1,15 +1,15 @@
-# react-canvas-knob
+# treactr-canvas-knob
 
 [jQuery Knob](https://github.com/aterrien/jQuery-Knob) rebuilt with React (no jQuery). This is an HTML5 Canvas-based component that serves as a circular range input. Accepts mouse, touch, scrollwheel, and keyboard input.
 
 ## Installation
-`npm install react-canvas-knob --save`
+`npm install treactr-canvas-knob --save`
 
 ## Example usage
-Please note that react-canvas-knob must be used as a [controlled input](https://facebook.github.io/react/docs/forms.html#controlled-components).
+Please note that treactr-canvas-knob must be used as a [controlled input](https://facebook.github.io/react/docs/forms.html#controlled-components).
 ```js
 import React from 'react';
-import Knob from 'react-canvas-knob';
+import Knob from 'treactr-canvas-knob';
 
 class MyComponent extends React.Component {
   constructor(props) {

@@ -1,6 +1,6 @@
 {
-  "name": "react-canvas-knob",
-  "version": "0.3.0",
+  "name": "treactr-canvas-knob",
+  "version": "0.3.1",
   "description": "HTML5 Canvas-based React knob/dial component",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "babel": "node_modules/babel-cli/lib/babel/index.js Knob.js -o index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "git@github.com:joshjg/react-canvas-knob.git",
+  "repository": "git@github.com:kevinchau321/treactr-canvas-knob.git",
   "keywords": [
     "react",
     "canvas",
@@ -16,12 +16,12 @@
     "dial",
     "control"
   ],
-  "author": "Joshua Goldman",
+  "author": "Kevin Chau",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joshjg/react-canvas-knob"
+    "url": "https://github.com/kevinchau321/treactr-canvas-knob"
   },
-  "homepage": "https://github.com/joshjg/react-canvas-knob#readme",
+  "homepage": "https://github.com/kevinchau321/treactr-canvas-knob#readme",
   "files": [
     "index.js"
   ],

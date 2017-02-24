@@ -32,7 +32,7 @@ export default {
     new HtmlWebpackPlugin({
       inject: false,
       template: HtmlWebpackTemplate,
-      title: 'react-canvas-knob',
+      title: 'treactr-canvas-knob',
       appMountId: 'root',
       mobile: true,
     }),

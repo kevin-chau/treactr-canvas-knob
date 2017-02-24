@@ -274,15 +274,15 @@ Knob.propTypes = {
 };
 Knob.defaultProps = {
   min: 0,
-  max: 100,
+  max: 127,
   step: 1,
   log: false,
-  width: 0, // actual default: width = height = 200px
-  height: 0, // see `dimension` below
-  thickness: 0.35,
+  width: 36, // actual default: width = height = 200px
+  height: 36, // see `dimension` below
+  thickness: 0.2,
   lineCap: 'butt',
-  bgColor: '#EEE',
-  fgColor: '#EA2',
+  bgColor: '#595856',
+  fgColor: '#FF8400',
   inputColor: '',
   font: 'Arial',
   fontWeight: 'bold',
@@ -291,8 +291,8 @@ Knob.defaultProps = {
   stopper: true,
   readOnly: false,
   disableTextInput: false,
-  displayInput: true,
-  angleArc: 360,
-  angleOffset: 0
+  displayInput: false,
+  angleArc: 300,
+  angleOffset: -150
 };
 exports.default = Knob;
