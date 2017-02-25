@@ -1,74 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Knob from './Knob';
+import { Knob, BiDirectionalKnob } from './Knob';
 
 class Root extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: 10 };
+    this.state = {
+      value0: 127,
+      value1: 63,
+      value2: 10,
+      value3: 10,
+      value4: 10,
+      value5: 10,
+      value6: 10,
+    };
   }
-  handleChange = (newValue) => {
-    this.setState({ value: newValue });
-  };
   render() {
     return (
       <div>
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
-      <Knob
-        value={this.state.value}
-        onChange={this.handleChange}
-        log
-        step={10}
-        min={0.001}
-        max={100000}
-      />
+        <BiDirectionalKnob
+          value={this.state.value0}
+          onChange={(newValue) => { this.setState({ value0: newValue }); }}
+        />
+        <BiDirectionalKnob
+          value={this.state.value1}
+          onChange={(newValue) => { this.setState({ value1: newValue }); }}
+        />
+        <Knob
+          value={this.state.value2}
+          onChange={(newValue) => { this.setState({ value2: newValue }); }}
+        />
+        <Knob
+          value={this.state.value3}
+          onChange={(newValue) => { this.setState({ value3: newValue }); }}
+        />
+        <Knob
+          value={this.state.value4}
+          onChange={(newValue) => { this.setState({ value4: newValue }); }}
+        />
+        <Knob
+          value={this.state.value5}
+          onChange={(newValue) => { this.setState({ value5: newValue }); }}
+        />
+        <Knob
+          value={this.state.value6}
+          onChange={(newValue) => { this.setState({ value6: newValue }); }}
+        />
       </div>
     );
   }

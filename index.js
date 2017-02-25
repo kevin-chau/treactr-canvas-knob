@@ -345,4 +345,17 @@ Knob.defaultProps = {
   borderThickness: 1.25,
   knobColor: '#252828'
 };
-exports.default = Knob;
+
+var BiDirectionalKnob = function (_Knob) {
+  _inherits(BiDirectionalKnob, _Knob);
+
+  function BiDirectionalKnob() {
+    _classCallCheck(this, BiDirectionalKnob);
+
+    return _possibleConstructorReturn(this, (BiDirectionalKnob.__proto__ || Object.getPrototypeOf(BiDirectionalKnob)).apply(this, arguments));
+  }
+
+  return BiDirectionalKnob;
+}(Knob);
+
+exports.default = { Knob: Knob, BiDirectionalKnob: BiDirectionalKnob };
