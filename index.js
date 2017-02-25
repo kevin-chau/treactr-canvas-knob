@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.BiDirectionalKnob = exports.Knob = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -277,13 +278,13 @@ var Knob = function (_React$Component) {
       ctx.beginPath();
       ctx.lineWidth = this.radius - 1.25 * this.xy * this.props.thickness;
       ctx.strokeStyle = 'black';
-      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.375, a.endAngle + 0.04, a.acw);
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.2, a.endAngle + 0.2, a.acw);
       ctx.stroke();
       // knob indicator
       ctx.beginPath();
       ctx.lineWidth = this.radius - 1.5 * this.xy * this.props.thickness;
       ctx.strokeStyle = '#D7D7D7';
-      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.275, a.endAngle - 0.05, a.acw);
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.1, a.endAngle + 0.1, a.acw);
       ctx.stroke();
     }
   }]);
@@ -355,7 +356,108 @@ var BiDirectionalKnob = function (_Knob) {
     return _possibleConstructorReturn(this, (BiDirectionalKnob.__proto__ || Object.getPrototypeOf(BiDirectionalKnob)).apply(this, arguments));
   }
 
+  _createClass(BiDirectionalKnob, [{
+    key: 'drawCanvas',
+    value: function drawCanvas() {
+      this.canvasRef.width = this.w + 2 * this.props.borderThickness + 2; // clears the canvas
+      this.canvasRef.height = this.h + 2 * this.props.borderThickness;
+      var ctx = this.canvasRef.getContext('2d');
+      this.xy = (this.w + 2 * this.props.borderThickness) / 2; // coordinates of canvas center
+      this.lineWidth = this.xy * this.props.thickness;
+      this.radius = this.xy - this.lineWidth / 2;
+      ctx.lineWidth = this.lineWidth;
+      ctx.lineCap = this.props.lineCap;
+
+      // background arc border
+      ctx.beginPath();
+      ctx.strokeStyle = 'black';
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius, this.endAngle + 0.015, this.startAngle - 0.015, true);
+      ctx.stroke();
+
+      // background arc
+      ctx.beginPath();
+      ctx.strokeStyle = this.props.bgColor;
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius, this.endAngle - 0.00001, this.startAngle + 0.00001, true);
+      ctx.stroke();
+
+      // foreground arc
+      var a = this.getArcToValue(this.props.value);
+      ctx.beginPath();
+      ctx.strokeStyle = this.props.fgColor;
+      if (this.props.value > 63) {
+        a.cw = false;
+      } else {
+        a.cw = true;
+      }
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius, a.startAngle + 2.61799, a.endAngle, a.cw);
+      ctx.stroke();
+
+      // border
+      ctx.lineWidth = this.props.borderThickness;
+      ctx.strokeStyle = this.props.borderColor;
+      ctx.beginPath();
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius + this.xy * this.props.thickness / 2, this.startAngle - 0.00001, this.endAngle + 0.00001);
+      ctx.stroke();
+
+      // knob
+      ctx.beginPath();
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius - this.xy * this.props.thickness / 2, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#545656';
+      ctx.fill();
+      ctx.lineWidth = this.borderThickness;
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+      // Inner Knob
+      ctx.beginPath();
+      ctx.arc(this.xy + 1, this.xy + 2, this.radius - this.xy * this.props.thickness / 2 - 2, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#252828';
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#252828';
+      ctx.stroke();
+      // knob indicator border
+      ctx.beginPath();
+      ctx.lineWidth = this.radius - 1.25 * this.xy * this.props.thickness;
+      ctx.strokeStyle = 'black';
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.2, a.endAngle + 0.2, a.acw);
+      ctx.stroke();
+      // knob indicator
+      ctx.beginPath();
+      ctx.lineWidth = this.radius - 1.5 * this.xy * this.props.thickness;
+      ctx.strokeStyle = '#D7D7D7';
+      ctx.arc(this.xy + 1, this.xy + 1, this.radius / 2, a.endAngle - 0.1, a.endAngle + 0.1, a.acw);
+      ctx.stroke();
+    }
+  }]);
+
   return BiDirectionalKnob;
 }(Knob);
 
-exports.default = { Knob: Knob, BiDirectionalKnob: BiDirectionalKnob };
+BiDirectionalKnob.defaultProps = {
+  min: 0,
+  max: 127,
+  step: 1,
+  log: false,
+  width: 37, // actual default: width = height = 200px
+  height: 37, // see `dimension` below
+  thickness: 0.2,
+  lineCap: 'butt',
+  bgColor: '#595856',
+  fgColor: '#52F7FE',
+  inputColor: '',
+  font: 'Arial',
+  fontWeight: 'bold',
+  clockwise: true,
+  cursor: false,
+  stopper: true,
+  readOnly: false,
+  disableTextInput: false,
+  displayInput: false,
+  angleArc: 300,
+  angleOffset: -150,
+  borderColor: '#000000',
+  borderThickness: 1.25,
+  knobColor: '#252828'
+};
+exports.Knob = Knob;
+exports.BiDirectionalKnob = BiDirectionalKnob;
