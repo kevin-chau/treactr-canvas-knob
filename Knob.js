@@ -38,8 +38,8 @@ class Knob extends React.Component {
     max: 127,
     step: 1,
     log: false,
-    width: 200, // actual default: width = height = 200px
-    height: 200, // see `dimension` below
+    width: 37, // actual default: width = height = 200px
+    height: 37, // see `dimension` below
     thickness: 0.2,
     lineCap: 'butt',
     bgColor: '#595856',
