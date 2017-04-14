@@ -4,6 +4,7 @@ class Knob extends React.Component {
   static propTypes = {
     value: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
+    onChangeEnd: React.PropTypes.func,
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     step: React.PropTypes.number,
@@ -26,11 +27,14 @@ class Knob extends React.Component {
     readOnly: React.PropTypes.bool,
     disableTextInput: React.PropTypes.bool,
     displayInput: React.PropTypes.bool,
+    displayCustom: React.PropTypes.func,
     angleArc: React.PropTypes.number,
     angleOffset: React.PropTypes.number,
     borderColor: React.PropTypes.string,
     borderThickness: React.PropTypes.number, // px
     knobColor: React.PropTypes.string,
+    disableMouseWheel: React.PropTypes.bool,
+    title: React.PropTypes.string,
   };
 
   static defaultProps = {
@@ -58,16 +62,13 @@ class Knob extends React.Component {
     borderColor: '#000000',
     borderThickness: 1.25,
     knobColor: '#252828',
+    disableMouseWheel: false,
   };
 
   constructor(props) {
     super(props);
-    let dimension = 200; // default if neither width or height given
-    if (this.props.width || this.props.height) {
-      dimension = Math.max(this.props.width, this.props.height);
-    }
-    this.w = dimension;
-    this.h = dimension;
+    this.w = this.props.width || 200;
+    this.h = this.props.height || this.w;
     this.cursorExt = this.props.cursor === true ? 0.3 : this.props.cursor / 100;
     this.angleArc = this.props.angleArc * Math.PI / 180;
     this.angleOffset = this.props.angleOffset * Math.PI / 180;
@@ -159,7 +160,8 @@ class Knob extends React.Component {
     this.props.onChange(this.eventToValue(e));
   };
 
-  handleMouseUp = () => {
+  handleMouseUp = (e) => {
+    this.props.onChangeEnd(this.eventToValue(e));
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
     document.removeEventListener('keyup', this.handleEsc);
@@ -179,7 +181,8 @@ class Knob extends React.Component {
     this.props.onChange(this.eventToValue(e.targetTouches[this.touchIndex]));
   };
 
-  handleTouchEnd = () => {
+  handleTouchEnd = (e) => {
+    this.props.onChangeEnd(this.eventToValue(e.changedTouches[this.touchIndex]));
     document.removeEventListener('touchmove', this.handleTouchMove);
     document.removeEventListener('touchend', this.handleTouchEnd);
     document.removeEventListener('touchcancel', this.handleTouchEnd);
@@ -349,17 +352,9 @@ class Knob extends React.Component {
     ctx.stroke();
   }
 
-  render = () => (
-    <div
-      style={{ width: this.w, height: this.h, display: 'inline-block' }}
-      onWheel={this.props.readOnly ? null : this.handleWheel}
-    >
-      <canvas
-        ref={(ref) => { this.canvasRef = ref; }}
-        style={{ width: '100%', height: '100%' }}
-        onMouseDown={this.props.readOnly ? null : this.handleMouseDown}
-      />
-      {this.props.displayInput ?
+  renderCentre = () => {
+    if (this.props.displayInput) {
+      return (
         <input
           style={this.inputStyle()}
           type="text"
@@ -368,8 +363,25 @@ class Knob extends React.Component {
           onKeyDown={this.handleArrowKey}
           readOnly={this.props.readOnly || this.props.disableTextInput}
         />
-        : null
-      }
+      );
+    } else if (this.props.displayCustom && typeof this.props.displayCustom === 'function') {
+      return this.props.displayCustom();
+    }
+    return null;
+  };
+
+  render = () => (
+    <div
+      style={{ width: this.w, height: this.h, display: 'inline-block' }}
+      onWheel={this.props.readOnly || this.props.disableMouseWheel ? null : this.handleWheel}
+    >
+      <canvas
+        ref={(ref) => { this.canvasRef = ref; }}
+        style={{ width: '100%', height: '100%' }}
+        onMouseDown={this.props.readOnly ? null : this.handleMouseDown}
+        title={this.props.title ? `${this.props.title}: ${this.props.value}` : this.props.value}
+      />
+      {this.renderCentre()}
     </div>
   );
 }

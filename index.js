@@ -87,7 +87,8 @@ var Knob = function (_React$Component) {
       _this.props.onChange(_this.eventToValue(e));
     };
 
-    _this.handleMouseUp = function () {
+    _this.handleMouseUp = function (e) {
+      _this.props.onChangeEnd(_this.eventToValue(e));
       document.removeEventListener('mousemove', _this.handleMouseMove);
       document.removeEventListener('mouseup', _this.handleMouseUp);
       document.removeEventListener('keyup', _this.handleEsc);
@@ -107,7 +108,8 @@ var Knob = function (_React$Component) {
       _this.props.onChange(_this.eventToValue(e.targetTouches[_this.touchIndex]));
     };
 
-    _this.handleTouchEnd = function () {
+    _this.handleTouchEnd = function (e) {
+      _this.props.onChangeEnd(_this.eventToValue(e.changedTouches[_this.touchIndex]));
       document.removeEventListener('touchmove', _this.handleTouchMove);
       document.removeEventListener('touchend', _this.handleTouchEnd);
       document.removeEventListener('touchcancel', _this.handleTouchEnd);
@@ -162,37 +164,43 @@ var Knob = function (_React$Component) {
       };
     };
 
-    _this.render = function () {
-      return _react2.default.createElement(
-        'div',
-        {
-          style: { width: _this.w, height: _this.h, display: 'inline-block' },
-          onWheel: _this.props.readOnly ? null : _this.handleWheel
-        },
-        _react2.default.createElement('canvas', {
-          ref: function ref(_ref) {
-            _this.canvasRef = _ref;
-          },
-          style: { width: '100%', height: '100%' },
-          onMouseDown: _this.props.readOnly ? null : _this.handleMouseDown
-        }),
-        _this.props.displayInput ? _react2.default.createElement('input', {
+    _this.renderCentre = function () {
+      if (_this.props.displayInput) {
+        return _react2.default.createElement('input', {
           style: _this.inputStyle(),
           type: 'text',
           value: _this.props.value,
           onChange: _this.handleTextInput,
           onKeyDown: _this.handleArrowKey,
           readOnly: _this.props.readOnly || _this.props.disableTextInput
-        }) : null
+        });
+      } else if (_this.props.displayCustom && typeof _this.props.displayCustom === 'function') {
+        return _this.props.displayCustom();
+      }
+      return null;
+    };
+
+    _this.render = function () {
+      return _react2.default.createElement(
+        'div',
+        {
+          style: { width: _this.w, height: _this.h, display: 'inline-block' },
+          onWheel: _this.props.readOnly || _this.props.disableMouseWheel ? null : _this.handleWheel
+        },
+        _react2.default.createElement('canvas', {
+          ref: function ref(_ref) {
+            _this.canvasRef = _ref;
+          },
+          style: { width: '100%', height: '100%' },
+          onMouseDown: _this.props.readOnly ? null : _this.handleMouseDown,
+          title: _this.props.title ? _this.props.title + ': ' + _this.props.value : _this.props.value
+        }),
+        _this.renderCentre()
       );
     };
 
-    var dimension = 200; // default if neither width or height given
-    if (_this.props.width || _this.props.height) {
-      dimension = Math.max(_this.props.width, _this.props.height);
-    }
-    _this.w = dimension;
-    _this.h = dimension;
+    _this.w = _this.props.width || 200;
+    _this.h = _this.props.height || _this.w;
     _this.cursorExt = _this.props.cursor === true ? 0.3 : _this.props.cursor / 100;
     _this.angleArc = _this.props.angleArc * Math.PI / 180;
     _this.angleOffset = _this.props.angleOffset * Math.PI / 180;
@@ -295,6 +303,7 @@ var Knob = function (_React$Component) {
 Knob.propTypes = {
   value: _react2.default.PropTypes.number.isRequired,
   onChange: _react2.default.PropTypes.func.isRequired,
+  onChangeEnd: _react2.default.PropTypes.func,
   min: _react2.default.PropTypes.number,
   max: _react2.default.PropTypes.number,
   step: _react2.default.PropTypes.number,
@@ -314,11 +323,14 @@ Knob.propTypes = {
   readOnly: _react2.default.PropTypes.bool,
   disableTextInput: _react2.default.PropTypes.bool,
   displayInput: _react2.default.PropTypes.bool,
+  displayCustom: _react2.default.PropTypes.func,
   angleArc: _react2.default.PropTypes.number,
   angleOffset: _react2.default.PropTypes.number,
   borderColor: _react2.default.PropTypes.string,
   borderThickness: _react2.default.PropTypes.number, // px
   knobColor: _react2.default.PropTypes.string
+  disableMouseWheel: _react2.default.PropTypes.bool,
+  title: _react2.default.PropTypes.string
 };
 Knob.defaultProps = {
   min: 0,
@@ -458,6 +470,7 @@ BiDirectionalKnob.defaultProps = {
   borderColor: '#000000',
   borderThickness: 1.25,
   knobColor: '#252828'
+  disableMouseWheel: false
 };
 exports.Knob = Knob;
 exports.BiDirectionalKnob = BiDirectionalKnob;
