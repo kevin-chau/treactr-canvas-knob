@@ -328,7 +328,7 @@ Knob.propTypes = {
   angleOffset: _react2.default.PropTypes.number,
   borderColor: _react2.default.PropTypes.string,
   borderThickness: _react2.default.PropTypes.number, // px
-  knobColor: _react2.default.PropTypes.string
+  knobColor: _react2.default.PropTypes.string,
   disableMouseWheel: _react2.default.PropTypes.bool,
   title: _react2.default.PropTypes.string
 };
@@ -469,7 +469,7 @@ BiDirectionalKnob.defaultProps = {
   angleOffset: -150,
   borderColor: '#000000',
   borderThickness: 1.25,
-  knobColor: '#252828'
+  knobColor: '#252828',
   disableMouseWheel: false
 };
 exports.Knob = Knob;
